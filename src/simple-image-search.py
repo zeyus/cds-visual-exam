@@ -41,7 +41,8 @@ def get_args():
         description='Find similar images',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('target',
+    parser.add_argument('-t',
+                        '--target',
                         metavar='target',
                         type=str,
                         help='Target image (filename in data)')
@@ -66,6 +67,13 @@ def get_args():
                         metavar='num-similar',
                         type=int,
                         default=5)
+    
+    parser.add_argument('-f',
+                        '--file-extension',
+                        help='File extension for images (e.g. jpg)',
+                        metavar='file-extension',
+                        type=str,
+                        default='jpg')
 
     return parser.parse_args()
 
@@ -84,47 +92,78 @@ def parse_image(filename: str) -> np.ndarray:
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
-def extract_zip(data: pathlib.Path) -> t.List[str]:
+def get_images(path: pathlib.Path, img_ext: str = 'jpg') -> t.List[str]:
+    """Get list of images
+
+    Args:
+        path (pathlib.Path): Path to data
+        img_ext (str, optional): Image file extension. Defaults to 'jpg'.
+
+    Returns:
+        t.List[str]: List of image files
+    """
+    images = []
+    # Get list of files
+    for root, dir, files in os.walk(path):
+        # exclude hidden dirs and files
+        files = [file for file in files if not file.startswith('.') and not os.path.basename(file).startswith('.') and file.endswith(img_ext)]
+        images += [os.path.join(root, file) for file in files]
+    
+    return list(set(images))
+
+def extract_zip(data: pathlib.Path, img_ext: str = 'jpg') -> t.List[str]:
     """Extract zip file
+
+    If the files are already extracted, this will just return the list of files.
 
     Args:
         data (pathlib.Path): Path to zip file
+        img_ext (str, optional): Image file extension. Defaults to 'jpg'.
 
     Returns:
         List[str]: List of extracted files
     """
     # Extract zip file
     with zipfile.ZipFile(data, 'r') as zip_ref:
-        zip_ref.extractall(data.parent / 'extracted')
-    # Get list of extracted files
-    files = data.parent.glob('*')
+        zipped_files = zip_ref.filelist
+        # now we can test if the files are already extracted
+        if all([os.path.exists(data.parent / 'extracted' / z.filename) for z in zipped_files]):
+            # if they are, just return the list of files
+            print('Files already extracted previously')
+        else:
+            # otherwise, extract them
+            print('Extracting files')
+            zip_ref.extractall(data.parent / 'extracted')
+        
+    # Get list of files
+    files = get_images(data.parent, img_ext)
     return files
 
-def load_data(data_path: pathlib.Path) -> t.List[np.ndarray]:
+def load_data(data_path: pathlib.Path, image_ext: str = 'jpg') -> t.Tuple[t.List[np.ndarray], t.List[str]]:
     """Load image data
 
     Args:
         data_path (pathlib.Path): Path to image data
 
     Returns:
-        t.List[np.array]: List of images
+        t.Tuple(t.List[np.ndarray] t.List[str]): List of images and list of filenames
+
     """
     # If data_path is a directory, get all the files in that directory
     if data_path.is_dir():
-        files = data_path.glob('*')
-    # If data_path is a file, assume it's a zip file and extract it
+        files = get_images(data_path, image_ext)
     elif data_path.is_file() and data_path.suffix == '.zip':
-        files = extract_zip(data_path)
-    else:
+        files = extract_zip(data_path, image_ext)
+    # If there's still only one (or zero) files, it's probably not a valid path
+    if len(list(files)) <= 1:
         raise ValueError(f'"{data_path}" is not a valid path')
-
-    # Load images
+    
     images = []
     for image_file in files:
         image = parse_image(image_file)
         images.append(image)
 
-    return images
+    return images, files
 
 def get_histogram(image: np.ndarray) -> np.ndarray:
     """Get histogram of image
@@ -159,6 +198,7 @@ def compare_histograms(target_hist: np.ndarray,
 
 def find_similar_images(target: np.ndarray,
                         images: t.List[np.ndarray],
+                        names: t.List[str],
                         n: int = 5) -> t.List[t.Tuple[str, float]]:
     """Find n most similar images
 
@@ -177,24 +217,45 @@ def find_similar_images(target: np.ndarray,
     # Compare target histogram to all other histograms
     distances = [compare_histograms(target_hist, hist) for hist in hists]
     # Sort by distance
-    sorted_distances = sorted(zip(images, distances), key=lambda x: x[1])
-    # Return n most similar images
-    return sorted_distances[:n]
+    sorted_distances = sorted(zip(names, distances), key=lambda x: x[1])
+    # Return n+1 most similar images (the first one will be the target image)
+    return sorted_distances[:min(n+1, len(sorted_distances))]
 
 def main():
-    """Main function
-    """
+    """Main function"""
     # Get command-line arguments
     args = get_args()
 
-    # Load target image
-    target = parse_image(args.target)
-
     # Load image data
-    images = load_data(args.data)
-
+    images, image_names = load_data(args.data, args.file_extension)
+    
+    # if no target is specified, prompt with a range (min, max indices of images)
+    if args.target is None:
+        target = None
+        while not type(target) == np.ndarray:
+            min_index = 1
+            max_index = len(images)
+            print('No target image specified. Either specify a target image with the -t flag or enter a number below to select a target image from the data directory.')
+            print('Please specify a target image:')
+            print(f'Enter a number between {min_index} and {max_index}')
+            target_index = input()
+            if not target_index.isdigit():
+                raise ValueError('Please enter a number')
+            target_index = int(target_index)
+            if target_index < min_index or target_index > max_index:
+                raise ValueError(f'Please enter a number between {min_index} and {max_index}')
+            target = images[target_index-1]
+            target_name = image_names[target_index-1]
+    elif type(args.target) == str:
+        args.target = args.data / args.target
+        if not args.target.is_file():
+            raise ValueError(f'"{args.target}" is not a valid path')
+        target = parse_image(args.target)
+    else:
+        raise ValueError(f'"{args.target}" is not a valid path')
+    
     # Find similar images
-    similar_images = find_similar_images(target, images, args.num_similar)
+    similar_images = find_similar_images(target, images, image_names, args.num_similar)
 
     # Save results to CSV file
     df = pd.DataFrame(similar_images, columns=['filename', 'distance'])
