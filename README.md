@@ -1,3 +1,25 @@
+# VGG16 Image Classification with the Indo Fashion Dataset
+
+## Setup
+
+### Windows GPU (optional)
+
+If you have an NVIDIA GPU you can do the following before installing the prerequisites:
+
+- Install [Anaconda](https://www.anaconda.com/products/individual)
+- Create a new environment using `conda create -n vgg16 python=3.9`
+- Activate the environment using `conda activate vgg16`
+- Install cudatoolkit and cudnn with `conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0`
+
+### Prerequisites
+
+- Install the required packages using `pip install -r requirements.txt`
+- Download the dataset from [Kaggle](https://www.kaggle.com/datasets/validmodel/indo-fashion-dataset), unzip and save it to `data/`
+- - Get your kaggle API token from [here](https://www.kaggle.com/settings) and save it to `~/.kaggle/kaggle.json`
+- - Run `python src/cnn.py --download` to download the dataset
+
+
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/Aj7Sf-j_)
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10892503&assignment_repo_type=AssignmentRepo)
 # Using pretrained CNNs for image classification
