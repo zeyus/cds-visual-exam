@@ -6,6 +6,8 @@ from pathlib import Path
 from kaggle import api
 import pandas as pd
 import json
+from keras.preprocessing.image import ImageDataGenerator
+from keras.applications.efficientnet import preprocess_input
 
 
 def download_file(path: Path):
@@ -15,8 +17,12 @@ def download_file(path: Path):
         unzip=True)
 
 
-def load_dataset(path: Path):
+def load_dataset(path: Path, image_size = 32, batch_size = 32):
     """Load the kaggle dataset and return the test and train data."""
+    def convert_image_path(image_path):
+        base_dir = path
+        return str(base_dir / image_path)
+
     if not path.exists():
         raise FileNotFoundError(f"Dataset not found at {path}")
 
@@ -39,6 +45,61 @@ def load_dataset(path: Path):
         for line in f:
             val_data.append(json.loads(line))
 
-    return (pd.DataFrame(train_data),
-            pd.DataFrame(test_data),
-            pd.DataFrame(val_data))
+    train_data = pd.DataFrame(train_data)
+    test_data = pd.DataFrame(test_data)
+    val_data = pd.DataFrame(val_data)
+
+    train_data["image_path"] = train_data["image_path"].apply(
+        convert_image_path)
+    test_data["image_path"] = test_data["image_path"].apply(
+        convert_image_path)
+    val_data["image_path"] = val_data["image_path"].apply(
+        convert_image_path)
+
+    train_generator = ImageDataGenerator(
+        preprocessing_function=preprocess_input,
+    )
+
+    val_generator = ImageDataGenerator(
+        preprocessing_function=preprocess_input,
+    )
+
+    test_generator = ImageDataGenerator(
+        preprocessing_function=preprocess_input,
+    )
+
+    train_data = train_generator.flow_from_dataframe(
+        train_data,
+        x_col="image_path",
+        y_col="class_label",
+        target_size=(image_size, image_size),
+        batch_size=batch_size,
+        class_mode="categorical",
+        shuffle=True,
+        color_mode="rgb",
+        subset="training",
+    )
+
+    test_data = test_generator.flow_from_dataframe(
+        test_data,
+        x_col="image_path",
+        y_col="class_label",
+        target_size=(image_size, image_size),
+        batch_size=batch_size,
+        class_mode="categorical",
+        shuffle=True,
+        color_mode="rgb",
+    )
+
+    val_data = val_generator.flow_from_dataframe(
+        val_data,
+        x_col="image_path",
+        y_col="class_label",
+        target_size=(image_size, image_size),
+        batch_size=batch_size,
+        class_mode="categorical",
+        shuffle=True,
+        color_mode="rgb",
+    )
+
+    return train_data, test_data, val_data

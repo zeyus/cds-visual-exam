@@ -105,4 +105,5 @@ def run():
     logging.info("Version: %s", __version__)
     logging.info("Running...")
     train_data, test_data, val_data = load_dataset(args.dataset_path)
+    print(val_data)
     model = get_model()
