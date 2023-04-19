@@ -8,8 +8,10 @@ import typing as t
 import argparse
 from pathlib import Path
 from .data import download_file, load_dataset
+from .stats import plot_history
 from .. import __version__
-from ..model import get_model
+from ..model import get_model, save_best_callback
+import tensorflow as tf
 
 
 def common_args(parser: argparse.ArgumentParser):
@@ -53,6 +55,37 @@ def common_args(parser: argparse.ArgumentParser):
         type=int,
         default=32
     )
+    parser.add_argument(
+        '-b',
+        '--batch-size',
+        help="The batch size",
+        type=int,
+        default=32
+    )
+    parser.add_argument(
+        '-e',
+        '--epochs',
+        help="The number of epochs",
+        type=int,
+        default=10
+    )
+    parser.add_argument(
+        '-o',
+        '--out',
+        help="The output path for the plots and stats",
+        type=Path,
+        default=Path("out"))
+
+    parser.add_argument('-n',
+                        '--no-train',
+                        help="Do not train the model",
+                        action="store_true",
+                        default=True)
+    parser.add_argument('-c',
+                        '--from-checkpoint',
+                        help="Use the latest checkpoint if available.",
+                        action="store_true",
+                        default=False)
 
     return parser
 
@@ -104,6 +137,35 @@ def run():
     logging.info("Model save path: %s", args.model_save_path)
     logging.info("Version: %s", __version__)
     logging.info("Running...")
-    train_data, test_data, val_data = load_dataset(args.dataset_path)
-    print(val_data)
-    model = get_model()
+    train_data, test_data, val_data, classes = load_dataset(
+        args.dataset_path,
+        args.image_size,
+        args.batch_size)
+
+    if not args.model_save_path.exists():
+        args.model_save_path.mkdir(parents=True)
+
+    logging.info("Classes: %s", classes)
+
+    if args.from_checkpoint:
+        model = tf.keras.models.load_model(args.model_save_path)
+    else:
+        model = get_model(
+            output_classes=len(classes),
+            input_shape=(args.image_size, args.image_size, 3))
+
+    if not args.no_train:
+        H: tf.keras.callbacks.History = model.fit(
+            train_data,
+            epochs=args.epochs,
+            validation_data=val_data,
+            callbacks=[save_best_callback(args.model_save_path)],
+            verbose=1)  # type: ignore
+
+        plot_history(H, args.epochs)
+
+    logging.info("Evaluating...")
+    loss, accuracy = model.evaluate(test_data, verbose=1)
+    logging.info("Loss: %s", loss)
+    logging.info("Accuracy: %s", accuracy)
+
