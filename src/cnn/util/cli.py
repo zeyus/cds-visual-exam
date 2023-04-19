@@ -8,9 +8,9 @@ import typing as t
 import argparse
 from pathlib import Path
 from .data import download_file, load_dataset
-from .stats import plot_history
+from .stats import plot_history, generate_save_basename, save_classification_report, EpochTrackerCallback
 from .. import __version__
-from ..model import get_model, save_best_callback
+from ..model import get_model, save_best_callback, get_model_resnet
 import tensorflow as tf
 
 
@@ -48,13 +48,30 @@ def common_args(parser: argparse.ArgumentParser):
         type=Path,
         default=Path("data")
     )
-    parser.add_argument(
+
+    # either -s for image size or -w and -h for width and height
+    image_size_group = parser.add_mutually_exclusive_group()
+    image_size_group.add_argument(
         '-s',
         '--image-size',
-        help="The input size of the image, e.g. 32 for 32x32",
+        help="The image size",
         type=int,
         default=32
     )
+    w_h_group = image_size_group.add_argument_group()
+    w_h_group.add_argument(
+        '-w',
+        '--image-width',
+        help="The image width",
+        type=int
+    )
+    w_h_group.add_argument(
+        '-t',
+        '--image-height',
+        help="The image height",
+        type=int
+    )
+
     parser.add_argument(
         '-b',
         '--batch-size',
@@ -80,13 +97,17 @@ def common_args(parser: argparse.ArgumentParser):
                         '--no-train',
                         help="Do not train the model",
                         action="store_true",
-                        default=True)
+                        default=False)
     parser.add_argument('-c',
                         '--from-checkpoint',
-                        help="Use the latest checkpoint if available.",
+                        help="Use the checkpoint at the given path",
+                        type=Path,
+                        default=None)
+    parser.add_argument('-r',
+                        '--resnet',
+                        help="Use ResNet50 as the base model.",
                         action="store_true",
                         default=False)
-
     return parser
 
 
@@ -133,39 +154,84 @@ def run():
             "Dataset path does not exist. "
             "Please download the dataset first.")
 
+    if args.image_width and args.image_height:
+        input_shape = (args.image_width, args.image_height, 3)
+    else:
+        input_shape = (args.image_size, args.image_size, 3)
+
+    logging.info("Image input size: %s", input_shape)
+
     logging.info("Dataset path: %s", args.dataset_path)
     logging.info("Model save path: %s", args.model_save_path)
     logging.info("Version: %s", __version__)
     logging.info("Running...")
     train_data, test_data, val_data, classes = load_dataset(
         args.dataset_path,
-        args.image_size,
+        input_shape,
         args.batch_size)
 
-    if not args.model_save_path.exists():
-        args.model_save_path.mkdir(parents=True)
+    if args.resnet:
+        logging.info("Using ResNet50 as the base model.")
+        model_save_path = args.model_save_path / "resnet"
+        model_func = get_model_resnet
+    else:
+        logging.info("Using VGG16 as the base model.")
+        model_save_path = args.model_save_path / "vgg16"
+        model_func = get_model
+    if not model_save_path.exists():
+        model_save_path.mkdir(parents=True)
+
+    if not args.out.exists():
+        args.out.mkdir(parents=True)
 
     logging.info("Classes: %s", classes)
 
+    out_file_basename = generate_save_basename(
+        args.out,
+        "resnet" if args.resnet else "vgg16",
+        input_shape,
+        args.batch_size,
+        args.epochs,
+    )
+
+    model_save_basename = generate_save_basename(
+        model_save_path,
+        "resnet" if args.resnet else "vgg16",
+        input_shape,
+        args.batch_size,
+        args.epochs,
+    )
+
     if args.from_checkpoint:
-        model = tf.keras.models.load_model(args.model_save_path)
+        logging.info("Loading model from checkpoint: %s", args.from_checkpoint)
+        model = tf.keras.models.load_model(args.from_checkpoint)
     else:
-        model = get_model(
+        model = model_func(
             output_classes=len(classes),
-            input_shape=(args.image_size, args.image_size, 3))
+            input_shape=input_shape)
+
+    model_save_filename = model_save_basename.with_suffix(".tf")
 
     if not args.no_train:
-        H: tf.keras.callbacks.History = model.fit(
-            train_data,
-            epochs=args.epochs,
-            validation_data=val_data,
-            callbacks=[save_best_callback(args.model_save_path)],
-            verbose=1)  # type: ignore
-
-        plot_history(H, args.epochs)
-
+        logging.info("Training...")
+        epoch_tracker = EpochTrackerCallback()
+        H = None
+        try:
+            H = model.fit(
+                train_data,
+                epochs=args.epochs,
+                validation_data=val_data,
+                callbacks=[save_best_callback(model_save_filename), epoch_tracker],
+                verbose=1)  # type: ignore
+        except KeyboardInterrupt:
+            logging.info(f"Training interrupted. Current Epoch: {epoch_tracker.EPOCH}")
+            if H is None:
+                H = model.history
+        if epoch_tracker.EPOCH > 0:
+            plot_history(H, epoch_tracker.EPOCH, out_file_basename)
     logging.info("Evaluating...")
-    loss, accuracy = model.evaluate(test_data, verbose=1)
-    logging.info("Loss: %s", loss)
-    logging.info("Accuracy: %s", accuracy)
-
+    save_classification_report(
+        out_file_basename,
+        model,
+        test_data,
+        classes)
