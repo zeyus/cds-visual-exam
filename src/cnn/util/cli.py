@@ -108,6 +108,11 @@ def common_args(parser: argparse.ArgumentParser):
                         help="Use ResNet50 as the base model.",
                         action="store_true",
                         default=False)
+    parser.add_argument('-p',
+                        '--parallel',
+                        help="Number of workers / threads to use for parallel processing.",
+                        type=int,
+                        default=4)
     return parser
 
 
@@ -222,7 +227,9 @@ def run():
                 epochs=args.epochs,
                 validation_data=val_data,
                 callbacks=[save_best_callback(model_save_filename), epoch_tracker],
-                verbose=1)  # type: ignore
+                verbose=1,
+                workers=args.parallel,
+                use_multiprocessing=True if args.parallel > 1 else False)
         except KeyboardInterrupt:
             logging.info(f"Training interrupted. Current Epoch: {epoch_tracker.EPOCH}")
             if H is None:
