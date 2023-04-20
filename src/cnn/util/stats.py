@@ -46,7 +46,7 @@ def plot_history(H, epochs, save_path=None):
     plt.tight_layout()
     plt.legend()
     if save_path:
-        save_path = save_path.with_suffix(".png")
+        save_path = save_path.with_suffix(".history.png")
         plt.savefig(save_path)
         # save history to csv
         history_df = pd.DataFrame(H.history)
@@ -97,7 +97,7 @@ def save_classification_report(save_path, model, test_data, classes):
         f.write("\n".join(model_summary))
         f.write(report)
 
-    save_confusion_matrix(save_path.with_suffix(".png"), y_true, y_pred, classes)
+    save_confusion_matrix(save_path.with_suffix(".cm.png"), y_true, y_pred, classes)
 
     logging.info(report)
 

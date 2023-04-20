@@ -10,6 +10,7 @@ from pathlib import Path
 from .data import download_file, load_dataset
 from .stats import plot_history, generate_save_basename, save_classification_report, EpochTrackerCallback
 from .. import __version__
+from . import set_tf_optim
 from ..model import get_model, save_best_callback, get_model_resnet
 import tensorflow as tf
 
@@ -158,6 +159,9 @@ def run():
         raise FileNotFoundError(
             "Dataset path does not exist. "
             "Please download the dataset first.")
+
+    if args.parallel > 0:
+        set_tf_optim(args.parallel)
 
     if args.image_width and args.image_height:
         input_shape = (args.image_width, args.image_height, 3)
