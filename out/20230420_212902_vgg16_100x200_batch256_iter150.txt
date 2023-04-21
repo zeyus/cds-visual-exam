@@ -1,0 +1,76 @@
+Model: "model"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_1 (InputLayer)        [(None, 100, 200, 3)]     0         
+                                                                 
+ block1_conv1 (Conv2D)       (None, 100, 200, 64)      1792      
+                                                                 
+ block1_conv2 (Conv2D)       (None, 100, 200, 64)      36928     
+                                                                 
+ block1_pool (MaxPooling2D)  (None, 50, 100, 64)       0         
+                                                                 
+ block2_conv1 (Conv2D)       (None, 50, 100, 128)      73856     
+                                                                 
+ block2_conv2 (Conv2D)       (None, 50, 100, 128)      147584    
+                                                                 
+ block2_pool (MaxPooling2D)  (None, 25, 50, 128)       0         
+                                                                 
+ block3_conv1 (Conv2D)       (None, 25, 50, 256)       295168    
+                                                                 
+ block3_conv2 (Conv2D)       (None, 25, 50, 256)       590080    
+                                                                 
+ block3_conv3 (Conv2D)       (None, 25, 50, 256)       590080    
+                                                                 
+ block3_pool (MaxPooling2D)  (None, 12, 25, 256)       0         
+                                                                 
+ block4_conv1 (Conv2D)       (None, 12, 25, 512)       1180160   
+                                                                 
+ block4_conv2 (Conv2D)       (None, 12, 25, 512)       2359808   
+                                                                 
+ block4_conv3 (Conv2D)       (None, 12, 25, 512)       2359808   
+                                                                 
+ block4_pool (MaxPooling2D)  (None, 6, 12, 512)        0         
+                                                                 
+ block5_conv1 (Conv2D)       (None, 6, 12, 512)        2359808   
+                                                                 
+ block5_conv2 (Conv2D)       (None, 6, 12, 512)        2359808   
+                                                                 
+ block5_conv3 (Conv2D)       (None, 6, 12, 512)        2359808   
+                                                                 
+ block5_pool (MaxPooling2D)  (None, 3, 6, 512)         0         
+                                                                 
+ global_average_pooling2d (G  (None, 512)              0         
+ lobalAveragePooling2D)                                          
+                                                                 
+ flatten (Flatten)           (None, 512)               0         
+                                                                 
+ dense (Dense)               (None, 240)               123120    
+                                                                 
+ dense_1 (Dense)             (None, 15)                3615      
+                                                                 
+=================================================================
+Total params: 14,841,423
+Trainable params: 126,735
+Non-trainable params: 14,714,688
+_________________________________________________________________                      precision    recall  f1-score   support
+
+              blouse       0.93      0.89      0.91       500
+         dhoti_pants       0.84      0.50      0.63       500
+            dupattas       0.74      0.54      0.62       500
+               gowns       0.71      0.45      0.55       500
+           kurta_men       0.67      0.81      0.73       500
+leggings_and_salwars       0.59      0.74      0.66       500
+             lehenga       0.86      0.78      0.82       500
+         mojaris_men       0.86      0.84      0.85       500
+       mojaris_women       0.84      0.86      0.85       500
+       nehru_jackets       0.90      0.81      0.85       500
+            palazzos       0.88      0.63      0.74       500
+          petticoats       0.64      0.86      0.73       500
+               saree       0.60      0.91      0.72       500
+           sherwanis       0.84      0.70      0.76       500
+         women_kurta       0.53      0.74      0.62       500
+
+            accuracy                           0.74      7500
+           macro avg       0.76      0.74      0.74      7500
+        weighted avg       0.76      0.74      0.74      7500

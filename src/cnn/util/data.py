@@ -23,7 +23,7 @@ def download_file(path: Path):
         unzip=True)
 
 
-def load_dataset(path: Path, input_shape=(32, 32, 3), batch_size=32, parallel_procs=None) -> t.Tuple[
+def load_dataset(path: Path, input_shape=(32, 32, 3), batch_size=32) -> t.Tuple[
             tf.data.Dataset,
             tf.data.Dataset,
             tf.data.Dataset,
