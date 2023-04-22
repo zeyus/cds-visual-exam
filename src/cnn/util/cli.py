@@ -159,7 +159,9 @@ def run():
         raise FileNotFoundError(
             "Dataset path does not exist. "
             "Please download the dataset first.")
-
+    config = tf.compat.v1.ConfigProto()
+    config.gpu_options.allow_growth = True
+    session = tf.compat.v1.Session(config=config)
     if args.parallel > 0:
         set_tf_optim(args.parallel)
 
