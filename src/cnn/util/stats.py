@@ -13,10 +13,16 @@ def safe_file_name(name: str) -> str:
     return "".join([c if c.isalnum() else "_" for c in name])
 
 
-def generate_save_basename(base_path, model_name, input_size, batch_size, iterations, extra_params=[]):
+def generate_save_basename(
+        base_path,
+        model_name,
+        input_size,
+        batch_size,
+        iterations,
+        extra_params=[]):
     file_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"{file_timestamp}_{model_name}_{input_size[0]}x{input_size[1]}"
-    file_name += f"_batch{batch_size}_iter{iterations}"
+    file_name = f"{file_timestamp}_{model_name}_{input_size[0]}x"
+    file_name += f"{input_size[1]}_batch{batch_size}_iter{iterations}"
     if extra_params:
         file_name += "_" + "_".join(extra_params)
     file_name = safe_file_name(file_name)
@@ -30,7 +36,10 @@ def plot_history(H, epochs, save_path=None):
     plt.figure(figsize=(12, 6))
     plt.subplot(1, 2, 1)
     plt.plot(np.arange(0, epochs), H.history["loss"], label="train_loss")
-    plt.plot(np.arange(0, epochs), H.history["val_loss"], label="val_loss", linestyle=":")
+    plt.plot(np.arange(0, epochs),
+             H.history["val_loss"],
+             label="val_loss",
+             linestyle=":")
     plt.title("Loss curve")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
@@ -39,7 +48,10 @@ def plot_history(H, epochs, save_path=None):
 
     plt.subplot(1, 2, 2)
     plt.plot(np.arange(0, epochs), H.history["accuracy"], label="train_acc")
-    plt.plot(np.arange(0, epochs), H.history["val_accuracy"], label="val_acc", linestyle=":")
+    plt.plot(np.arange(0, epochs),
+             H.history["val_accuracy"],
+             label="val_acc",
+             linestyle=":")
     plt.title("Accuracy curve")
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
@@ -95,9 +107,10 @@ def save_classification_report(save_path, model, test_data, classes):
     out_filename = save_path.with_suffix(".txt")
     with open(out_filename, "w") as f:
         f.write("\n".join(model_summary))
-        f.write(report)
+        f.write(report)  # type: ignore
 
-    save_confusion_matrix(save_path.with_suffix(".cm.png"), y_true, y_pred, classes)
+    save_confusion_matrix(
+        save_path.with_suffix(".cm.png"), y_true, y_pred, classes)
 
     logging.info(report)
 

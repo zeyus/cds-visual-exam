@@ -5,7 +5,6 @@ Dataset utilities.
 import typing as t
 import logging
 from pathlib import Path
-from kaggle import api
 import pandas as pd
 import numpy as np
 import json
@@ -17,13 +16,15 @@ from sklearn.preprocessing import LabelBinarizer
 
 
 def download_file(path: Path):
+    from kaggle import api
     api.dataset_download_cli(
         "validmodel/indo-fashion-dataset",
         path=path,
         unzip=True)
 
 
-def load_dataset(path: Path, input_shape=(32, 32, 3), batch_size=32) -> t.Tuple[
+def load_dataset(
+        path: Path, input_shape=(32, 32, 3), batch_size=32) -> t.Tuple[
             tf.data.Dataset,
             tf.data.Dataset,
             tf.data.Dataset,
@@ -108,33 +109,15 @@ def load_dataset(path: Path, input_shape=(32, 32, 3), batch_size=32) -> t.Tuple[
     lb = LabelBinarizer()
     lb.fit(labels)
 
-    # if all((p.exists() for p in [
-    #         path / f"{what}_{input_shape[0]}x{input_shape[1]}_data.tfrecord" for what in (
-    #             "train",
-    #             "test",
-    #             "val")])):
-    #     logging.info("Loading tfrecord dataset")
-    #     train_data = tf.data.Dataset.load(
-    #         str(path / f"train_{input_shape[0]}x{input_shape[1]}_data.tfrecord"))
-    #     print(train_data)
-    #     test_data = tf.data.Dataset.load(
-    #         str(path / f"test_{input_shape[0]}x{input_shape[1]}_data.tfrecord"))
-    #     val_data = tf.data.Dataset.load(
-    #         str(path / f"val_{input_shape[0]}x{input_shape[1]}_data.tfrecord"))
-    #     classes = np.load(path / "classes.npy")
-
-    #     return (
-    #         configure_for_performance(train_data, shuffle=True, augment=True),
-    #         configure_for_performance(test_data),
-    #         configure_for_performance(val_data),
-    #         classes)
-    # else:
-    #     logging.info("No tfrecord dataset found.")
     image_count = len(list(path.glob('images/**/*.jp*g')))
     logging.info(f"Found {image_count} images")
     logging.info("Loading metadata")
 
-    def create_dataset(which: str, lb: LabelBinarizer, shuffle: bool = False, augment: bool = False):
+    def create_dataset(
+            which: str,
+            lb: LabelBinarizer,
+            shuffle: bool = False,
+            augment: bool = False):
         meta_path = path / f"{which}_data.json"
         logging.info(f"Loaded metadata for {which} dataset")
         ds_meta = []
@@ -162,9 +145,12 @@ def load_dataset(path: Path, input_shape=(32, 32, 3), batch_size=32) -> t.Tuple[
         ds_data = tf.data.Dataset.from_generator(
             process_path_gen,
             output_types=(tf.float16, tf.uint8),
-            output_shapes=([input_shape[0], input_shape[1], input_shape[2]], [len(labels)]),
+            output_shapes=([
+                input_shape[0],
+                input_shape[1],
+                input_shape[2]], [len(labels)]),
             args=(ds_paths, ds_labels, augment))
-        # ds_data.save(str(path / f"{which}_{input_shape[0]}x{input_shape[1]}_data.tfrecord"))
+
         logging.info(f"Optimizing {which} data for performance")
         ds_data = configure_for_performance(
             ds_data,

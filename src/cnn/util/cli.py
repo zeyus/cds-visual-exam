@@ -8,7 +8,12 @@ import typing as t
 import argparse
 from pathlib import Path
 from .data import download_file, load_dataset
-from .stats import plot_history, generate_save_basename, save_classification_report, EpochTrackerCallback
+from .stats import (
+    plot_history,
+    generate_save_basename,
+    save_classification_report,
+    EpochTrackerCallback
+)
 from .. import __version__
 from . import set_tf_optim
 from ..model import get_model, save_best_callback, get_model_resnet
@@ -38,7 +43,7 @@ def common_args(parser: argparse.ArgumentParser):
     )
     parser.add_argument(
         '--download',
-        help="Download the dataset",
+        help="Download the dataset from kaggle",
         action="store_true",
         default=False
     )
@@ -55,7 +60,7 @@ def common_args(parser: argparse.ArgumentParser):
     image_size_group.add_argument(
         '-s',
         '--image-size',
-        help="The image size",
+        help="The image size (width and height)",
         type=int,
         default=32
     )
@@ -111,7 +116,7 @@ def common_args(parser: argparse.ArgumentParser):
                         default=False)
     parser.add_argument('-p',
                         '--parallel',
-                        help="Number of workers / threads to use for parallel processing.",
+                        help="Number of workers/threads for processing.",
                         type=int,
                         default=4)
     return parser
@@ -160,8 +165,8 @@ def run():
             "Dataset path does not exist. "
             "Please download the dataset first.")
     config = tf.compat.v1.ConfigProto()
-    config.gpu_options.allow_growth = True
-    session = tf.compat.v1.Session(config=config)
+    config.gpu_options.allow_growth = True  # type: ignore
+    session = tf.compat.v1.Session(config=config)  # noqa
     if args.parallel > 0:
         set_tf_optim(args.parallel)
 
@@ -228,18 +233,21 @@ def run():
         epoch_tracker = EpochTrackerCallback()
         H = None
         try:
-            H = model.fit(
+            H = model.fit(  # type: ignore
                 train_data,
                 epochs=args.epochs,
                 validation_data=val_data,
-                callbacks=[save_best_callback(model_save_filename), epoch_tracker],
-                verbose=1,
+                callbacks=[
+                    save_best_callback(model_save_filename),
+                    epoch_tracker],
+                verbose=1,  # type: ignore
                 workers=args.parallel,
                 use_multiprocessing=True if args.parallel > 1 else False)
         except KeyboardInterrupt:
-            logging.info(f"Training interrupted. Current Epoch: {epoch_tracker.EPOCH}")
+            logging.info(
+                f"Training interrupted. Current Epoch: {epoch_tracker.EPOCH}")
             if H is None:
-                H = model.history
+                H = model.history  # type: ignore
         if epoch_tracker.EPOCH > 0:
             plot_history(H, epoch_tracker.EPOCH, out_file_basename)
     logging.info("Evaluating...")

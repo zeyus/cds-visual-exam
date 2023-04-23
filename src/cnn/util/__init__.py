@@ -1,6 +1,7 @@
 import os
 import tensorflow as tf
 
+
 def set_tf_optim(num_threads):
     os.environ["OMP_NUM_THREADS"] = f"{num_threads}"
     os.environ["TF_NUM_INTRAOP_THREADS"] = f"{num_threads}"
