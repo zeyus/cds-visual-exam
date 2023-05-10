@@ -1,0 +1,912 @@
+Model: "model"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_1 (InputLayer)           [(None, 64, 128, 3)  0           []                               
+                                ]                                                                 
+                                                                                                  
+ rescaling (Rescaling)          (None, 64, 128, 3)   0           ['input_1[0][0]']                
+                                                                                                  
+ normalization (Normalization)  (None, 64, 128, 3)   0           ['rescaling[0][0]']              
+                                                                                                  
+ zero_padding2d (ZeroPadding2D)  (None, 66, 130, 3)  0           ['normalization[0][0]']          
+                                                                                                  
+ stem_1_stem_conv_1 (Conv2D)    (None, 32, 64, 32)   864         ['zero_padding2d[0][0]']         
+                                                                                                  
+ stem_1_stem_batch_norm_1 (Batc  (None, 32, 64, 32)  128         ['stem_1_stem_conv_1[0][0]']     
+ hNormalization)                                                                                  
+                                                                                                  
+ stem_1_stem_act_1 (Activation)  (None, 32, 64, 32)  0           ['stem_1_stem_batch_norm_1[0][0]'
+                                                                 ]                                
+                                                                                                  
+ stem_1_stem_conv_2 (Conv2D)    (None, 32, 64, 32)   9216        ['stem_1_stem_act_1[0][0]']      
+                                                                                                  
+ stem_1_stem_batch_norm_2 (Batc  (None, 32, 64, 32)  128         ['stem_1_stem_conv_2[0][0]']     
+ hNormalization)                                                                                  
+                                                                                                  
+ stem_1_stem_act_2 (Activation)  (None, 32, 64, 32)  0           ['stem_1_stem_batch_norm_2[0][0]'
+                                                                 ]                                
+                                                                                                  
+ stem_1_stem_conv_3 (Conv2D)    (None, 32, 64, 64)   18432       ['stem_1_stem_act_2[0][0]']      
+                                                                                                  
+ stem_1_stem_batch_norm_3 (Batc  (None, 32, 64, 64)  256         ['stem_1_stem_conv_3[0][0]']     
+ hNormalization)                                                                                  
+                                                                                                  
+ stem_1_stem_act_3 (Activation)  (None, 32, 64, 64)  0           ['stem_1_stem_batch_norm_3[0][0]'
+                                                                 ]                                
+                                                                                                  
+ zero_padding2d_1 (ZeroPadding2  (None, 34, 66, 64)  0           ['stem_1_stem_act_3[0][0]']      
+ D)                                                                                               
+                                                                                                  
+ stem_1_stem_conv_4 (Conv2D)    (None, 16, 32, 64)   36864       ['zero_padding2d_1[0][0]']       
+                                                                                                  
+ stem_1_stem_batch_norm_4 (Batc  (None, 16, 32, 64)  256         ['stem_1_stem_conv_4[0][0]']     
+ hNormalization)                                                                                  
+                                                                                                  
+ stem_1_stem_act_4 (Activation)  (None, 16, 32, 64)  0           ['stem_1_stem_batch_norm_4[0][0]'
+                                                                 ]                                
+                                                                                                  
+ BlockGroup2__block_0__conv_1 (  (None, 16, 32, 64)  4096        ['stem_1_stem_act_4[0][0]']      
+ Conv2D)                                                                                          
+                                                                                                  
+ BlockGroup2__block_0_batch_nor  (None, 16, 32, 64)  256         ['BlockGroup2__block_0__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup2__block_0__act_1 (A  (None, 16, 32, 64)  0           ['BlockGroup2__block_0_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup2__block_0__conv_2 (  (None, 16, 32, 64)  36864       ['BlockGroup2__block_0__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup2__block_0__batch_no  (None, 16, 32, 64)  256         ['BlockGroup2__block_0__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup2__block_0__act_2 (A  (None, 16, 32, 64)  0           ['BlockGroup2__block_0__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_0__conv_3 (  (None, 16, 32, 256)  16384      ['BlockGroup2__block_0__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup2__block_0__batch_no  (None, 16, 32, 256)  1024       ['BlockGroup2__block_0__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup2__block_0__se_se_sq  (None, 256)         0           ['BlockGroup2__block_0__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_0__se_se_re  (None, 1, 1, 256)   0           ['BlockGroup2__block_0__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup2__block_0__se_se_re  (None, 1, 1, 64)    16448       ['BlockGroup2__block_0__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup2__block_0__se_se_ex  (None, 1, 1, 256)   16640       ['BlockGroup2__block_0__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_0__projecti  (None, 16, 32, 256)  16384      ['stem_1_stem_act_4[0][0]']      
+ on_conv (Conv2D)                                                                                 
+                                                                                                  
+ BlockGroup2__block_0__se_se_ex  (None, 16, 32, 256)  0          ['BlockGroup2__block_0__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup2__block_0__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_0__projecti  (None, 16, 32, 256)  1024       ['BlockGroup2__block_0__projectio
+ on_batch_norm (BatchNormalizat                                  n_conv[0][0]']                   
+ ion)                                                                                             
+                                                                                                  
+ add (Add)                      (None, 16, 32, 256)  0           ['BlockGroup2__block_0__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup2__block_0__projectio
+                                                                 n_batch_norm[0][0]']             
+                                                                                                  
+ BlockGroup2__block_0__output_a  (None, 16, 32, 256)  0          ['add[0][0]']                    
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup2__block_1__conv_1 (  (None, 16, 32, 64)  16384       ['BlockGroup2__block_0__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup2__block_1_batch_nor  (None, 16, 32, 64)  256         ['BlockGroup2__block_1__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup2__block_1__act_1 (A  (None, 16, 32, 64)  0           ['BlockGroup2__block_1_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup2__block_1__conv_2 (  (None, 16, 32, 64)  36864       ['BlockGroup2__block_1__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup2__block_1__batch_no  (None, 16, 32, 64)  256         ['BlockGroup2__block_1__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup2__block_1__act_2 (A  (None, 16, 32, 64)  0           ['BlockGroup2__block_1__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_1__conv_3 (  (None, 16, 32, 256)  16384      ['BlockGroup2__block_1__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup2__block_1__batch_no  (None, 16, 32, 256)  1024       ['BlockGroup2__block_1__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup2__block_1__se_se_sq  (None, 256)         0           ['BlockGroup2__block_1__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_1__se_se_re  (None, 1, 1, 256)   0           ['BlockGroup2__block_1__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup2__block_1__se_se_re  (None, 1, 1, 64)    16448       ['BlockGroup2__block_1__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup2__block_1__se_se_ex  (None, 1, 1, 256)   16640       ['BlockGroup2__block_1__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_1__se_se_ex  (None, 16, 32, 256)  0          ['BlockGroup2__block_1__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup2__block_1__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_1 (Add)                    (None, 16, 32, 256)  0           ['BlockGroup2__block_1__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup2__block_0__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup2__block_1__output_a  (None, 16, 32, 256)  0          ['add_1[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup2__block_2__conv_1 (  (None, 16, 32, 64)  16384       ['BlockGroup2__block_1__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup2__block_2_batch_nor  (None, 16, 32, 64)  256         ['BlockGroup2__block_2__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup2__block_2__act_1 (A  (None, 16, 32, 64)  0           ['BlockGroup2__block_2_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup2__block_2__conv_2 (  (None, 16, 32, 64)  36864       ['BlockGroup2__block_2__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup2__block_2__batch_no  (None, 16, 32, 64)  256         ['BlockGroup2__block_2__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup2__block_2__act_2 (A  (None, 16, 32, 64)  0           ['BlockGroup2__block_2__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_2__conv_3 (  (None, 16, 32, 256)  16384      ['BlockGroup2__block_2__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup2__block_2__batch_no  (None, 16, 32, 256)  1024       ['BlockGroup2__block_2__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup2__block_2__se_se_sq  (None, 256)         0           ['BlockGroup2__block_2__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_2__se_se_re  (None, 1, 1, 256)   0           ['BlockGroup2__block_2__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup2__block_2__se_se_re  (None, 1, 1, 64)    16448       ['BlockGroup2__block_2__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup2__block_2__se_se_ex  (None, 1, 1, 256)   16640       ['BlockGroup2__block_2__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup2__block_2__se_se_ex  (None, 16, 32, 256)  0          ['BlockGroup2__block_2__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup2__block_2__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_2 (Add)                    (None, 16, 32, 256)  0           ['BlockGroup2__block_2__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup2__block_1__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup2__block_2__output_a  (None, 16, 32, 256)  0          ['add_2[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup3__block_0__conv_1 (  (None, 16, 32, 128)  32768      ['BlockGroup2__block_2__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_0_batch_nor  (None, 16, 32, 128)  512        ['BlockGroup3__block_0__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup3__block_0__act_1 (A  (None, 16, 32, 128)  0          ['BlockGroup3__block_0_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ zero_padding2d_2 (ZeroPadding2  (None, 18, 34, 128)  0          ['BlockGroup3__block_0__act_1[0][
+ D)                                                              0]']                             
+                                                                                                  
+ BlockGroup3__block_0__conv_2 (  (None, 8, 16, 128)  147456      ['zero_padding2d_2[0][0]']       
+ Conv2D)                                                                                          
+                                                                                                  
+ BlockGroup3__block_0__batch_no  (None, 8, 16, 128)  512         ['BlockGroup3__block_0__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_0__act_2 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_0__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_0__conv_3 (  (None, 8, 16, 512)  65536       ['BlockGroup3__block_0__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_0__batch_no  (None, 8, 16, 512)  2048        ['BlockGroup3__block_0__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_0__se_se_sq  (None, 512)         0           ['BlockGroup3__block_0__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_0__se_se_re  (None, 1, 1, 512)   0           ['BlockGroup3__block_0__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_0__se_se_re  (None, 1, 1, 128)   65664       ['BlockGroup3__block_0__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_0__projecti  (None, 8, 16, 256)  0           ['BlockGroup2__block_2__output_ac
+ on_pooling (AveragePooling2D)                                   t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_0__se_se_ex  (None, 1, 1, 512)   66048       ['BlockGroup3__block_0__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_0__projecti  (None, 8, 16, 512)  131072      ['BlockGroup3__block_0__projectio
+ on_conv (Conv2D)                                                n_pooling[0][0]']                
+                                                                                                  
+ BlockGroup3__block_0__se_se_ex  (None, 8, 16, 512)  0           ['BlockGroup3__block_0__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup3__block_0__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_0__projecti  (None, 8, 16, 512)  2048        ['BlockGroup3__block_0__projectio
+ on_batch_norm (BatchNormalizat                                  n_conv[0][0]']                   
+ ion)                                                                                             
+                                                                                                  
+ add_3 (Add)                    (None, 8, 16, 512)   0           ['BlockGroup3__block_0__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup3__block_0__projectio
+                                                                 n_batch_norm[0][0]']             
+                                                                                                  
+ BlockGroup3__block_0__output_a  (None, 8, 16, 512)  0           ['add_3[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup3__block_1__conv_1 (  (None, 8, 16, 128)  65536       ['BlockGroup3__block_0__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_1_batch_nor  (None, 8, 16, 128)  512         ['BlockGroup3__block_1__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup3__block_1__act_1 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_1_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup3__block_1__conv_2 (  (None, 8, 16, 128)  147456      ['BlockGroup3__block_1__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_1__batch_no  (None, 8, 16, 128)  512         ['BlockGroup3__block_1__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_1__act_2 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_1__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_1__conv_3 (  (None, 8, 16, 512)  65536       ['BlockGroup3__block_1__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_1__batch_no  (None, 8, 16, 512)  2048        ['BlockGroup3__block_1__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_1__se_se_sq  (None, 512)         0           ['BlockGroup3__block_1__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_1__se_se_re  (None, 1, 1, 512)   0           ['BlockGroup3__block_1__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_1__se_se_re  (None, 1, 1, 128)   65664       ['BlockGroup3__block_1__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_1__se_se_ex  (None, 1, 1, 512)   66048       ['BlockGroup3__block_1__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_1__se_se_ex  (None, 8, 16, 512)  0           ['BlockGroup3__block_1__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup3__block_1__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_4 (Add)                    (None, 8, 16, 512)   0           ['BlockGroup3__block_1__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup3__block_0__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_1__output_a  (None, 8, 16, 512)  0           ['add_4[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup3__block_2__conv_1 (  (None, 8, 16, 128)  65536       ['BlockGroup3__block_1__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_2_batch_nor  (None, 8, 16, 128)  512         ['BlockGroup3__block_2__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup3__block_2__act_1 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_2_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup3__block_2__conv_2 (  (None, 8, 16, 128)  147456      ['BlockGroup3__block_2__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_2__batch_no  (None, 8, 16, 128)  512         ['BlockGroup3__block_2__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_2__act_2 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_2__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_2__conv_3 (  (None, 8, 16, 512)  65536       ['BlockGroup3__block_2__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_2__batch_no  (None, 8, 16, 512)  2048        ['BlockGroup3__block_2__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_2__se_se_sq  (None, 512)         0           ['BlockGroup3__block_2__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_2__se_se_re  (None, 1, 1, 512)   0           ['BlockGroup3__block_2__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_2__se_se_re  (None, 1, 1, 128)   65664       ['BlockGroup3__block_2__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_2__se_se_ex  (None, 1, 1, 512)   66048       ['BlockGroup3__block_2__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_2__se_se_ex  (None, 8, 16, 512)  0           ['BlockGroup3__block_2__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup3__block_2__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_5 (Add)                    (None, 8, 16, 512)   0           ['BlockGroup3__block_2__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup3__block_1__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_2__output_a  (None, 8, 16, 512)  0           ['add_5[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup3__block_3__conv_1 (  (None, 8, 16, 128)  65536       ['BlockGroup3__block_2__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_3_batch_nor  (None, 8, 16, 128)  512         ['BlockGroup3__block_3__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup3__block_3__act_1 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_3_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup3__block_3__conv_2 (  (None, 8, 16, 128)  147456      ['BlockGroup3__block_3__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_3__batch_no  (None, 8, 16, 128)  512         ['BlockGroup3__block_3__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_3__act_2 (A  (None, 8, 16, 128)  0           ['BlockGroup3__block_3__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_3__conv_3 (  (None, 8, 16, 512)  65536       ['BlockGroup3__block_3__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup3__block_3__batch_no  (None, 8, 16, 512)  2048        ['BlockGroup3__block_3__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup3__block_3__se_se_sq  (None, 512)         0           ['BlockGroup3__block_3__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_3__se_se_re  (None, 1, 1, 512)   0           ['BlockGroup3__block_3__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_3__se_se_re  (None, 1, 1, 128)   65664       ['BlockGroup3__block_3__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup3__block_3__se_se_ex  (None, 1, 1, 512)   66048       ['BlockGroup3__block_3__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup3__block_3__se_se_ex  (None, 8, 16, 512)  0           ['BlockGroup3__block_3__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup3__block_3__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_6 (Add)                    (None, 8, 16, 512)   0           ['BlockGroup3__block_3__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup3__block_2__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup3__block_3__output_a  (None, 8, 16, 512)  0           ['add_6[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup4__block_0__conv_1 (  (None, 8, 16, 256)  131072      ['BlockGroup3__block_3__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_0_batch_nor  (None, 8, 16, 256)  1024        ['BlockGroup4__block_0__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup4__block_0__act_1 (A  (None, 8, 16, 256)  0           ['BlockGroup4__block_0_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ zero_padding2d_3 (ZeroPadding2  (None, 10, 18, 256)  0          ['BlockGroup4__block_0__act_1[0][
+ D)                                                              0]']                             
+                                                                                                  
+ BlockGroup4__block_0__conv_2 (  (None, 4, 8, 256)   589824      ['zero_padding2d_3[0][0]']       
+ Conv2D)                                                                                          
+                                                                                                  
+ BlockGroup4__block_0__batch_no  (None, 4, 8, 256)   1024        ['BlockGroup4__block_0__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_0__act_2 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_0__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_0__conv_3 (  (None, 4, 8, 1024)  262144      ['BlockGroup4__block_0__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_0__batch_no  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_0__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_0__se_se_sq  (None, 1024)        0           ['BlockGroup4__block_0__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_0__se_se_re  (None, 1, 1, 1024)  0           ['BlockGroup4__block_0__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_0__se_se_re  (None, 1, 1, 256)   262400      ['BlockGroup4__block_0__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_0__projecti  (None, 4, 8, 512)   0           ['BlockGroup3__block_3__output_ac
+ on_pooling (AveragePooling2D)                                   t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_0__se_se_ex  (None, 1, 1, 1024)  263168      ['BlockGroup4__block_0__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_0__projecti  (None, 4, 8, 1024)  524288      ['BlockGroup4__block_0__projectio
+ on_conv (Conv2D)                                                n_pooling[0][0]']                
+                                                                                                  
+ BlockGroup4__block_0__se_se_ex  (None, 4, 8, 1024)  0           ['BlockGroup4__block_0__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup4__block_0__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_0__projecti  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_0__projectio
+ on_batch_norm (BatchNormalizat                                  n_conv[0][0]']                   
+ ion)                                                                                             
+                                                                                                  
+ add_7 (Add)                    (None, 4, 8, 1024)   0           ['BlockGroup4__block_0__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup4__block_0__projectio
+                                                                 n_batch_norm[0][0]']             
+                                                                                                  
+ BlockGroup4__block_0__output_a  (None, 4, 8, 1024)  0           ['add_7[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup4__block_1__conv_1 (  (None, 4, 8, 256)   262144      ['BlockGroup4__block_0__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_1_batch_nor  (None, 4, 8, 256)   1024        ['BlockGroup4__block_1__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup4__block_1__act_1 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_1_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup4__block_1__conv_2 (  (None, 4, 8, 256)   589824      ['BlockGroup4__block_1__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_1__batch_no  (None, 4, 8, 256)   1024        ['BlockGroup4__block_1__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_1__act_2 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_1__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_1__conv_3 (  (None, 4, 8, 1024)  262144      ['BlockGroup4__block_1__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_1__batch_no  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_1__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_1__se_se_sq  (None, 1024)        0           ['BlockGroup4__block_1__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_1__se_se_re  (None, 1, 1, 1024)  0           ['BlockGroup4__block_1__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_1__se_se_re  (None, 1, 1, 256)   262400      ['BlockGroup4__block_1__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_1__se_se_ex  (None, 1, 1, 1024)  263168      ['BlockGroup4__block_1__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_1__se_se_ex  (None, 4, 8, 1024)  0           ['BlockGroup4__block_1__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup4__block_1__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_8 (Add)                    (None, 4, 8, 1024)   0           ['BlockGroup4__block_1__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup4__block_0__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_1__output_a  (None, 4, 8, 1024)  0           ['add_8[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup4__block_2__conv_1 (  (None, 4, 8, 256)   262144      ['BlockGroup4__block_1__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_2_batch_nor  (None, 4, 8, 256)   1024        ['BlockGroup4__block_2__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup4__block_2__act_1 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_2_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup4__block_2__conv_2 (  (None, 4, 8, 256)   589824      ['BlockGroup4__block_2__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_2__batch_no  (None, 4, 8, 256)   1024        ['BlockGroup4__block_2__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_2__act_2 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_2__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_2__conv_3 (  (None, 4, 8, 1024)  262144      ['BlockGroup4__block_2__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_2__batch_no  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_2__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_2__se_se_sq  (None, 1024)        0           ['BlockGroup4__block_2__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_2__se_se_re  (None, 1, 1, 1024)  0           ['BlockGroup4__block_2__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_2__se_se_re  (None, 1, 1, 256)   262400      ['BlockGroup4__block_2__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_2__se_se_ex  (None, 1, 1, 1024)  263168      ['BlockGroup4__block_2__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_2__se_se_ex  (None, 4, 8, 1024)  0           ['BlockGroup4__block_2__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup4__block_2__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_9 (Add)                    (None, 4, 8, 1024)   0           ['BlockGroup4__block_2__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup4__block_1__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_2__output_a  (None, 4, 8, 1024)  0           ['add_9[0][0]']                  
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup4__block_3__conv_1 (  (None, 4, 8, 256)   262144      ['BlockGroup4__block_2__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_3_batch_nor  (None, 4, 8, 256)   1024        ['BlockGroup4__block_3__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup4__block_3__act_1 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_3_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup4__block_3__conv_2 (  (None, 4, 8, 256)   589824      ['BlockGroup4__block_3__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_3__batch_no  (None, 4, 8, 256)   1024        ['BlockGroup4__block_3__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_3__act_2 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_3__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_3__conv_3 (  (None, 4, 8, 1024)  262144      ['BlockGroup4__block_3__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_3__batch_no  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_3__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_3__se_se_sq  (None, 1024)        0           ['BlockGroup4__block_3__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_3__se_se_re  (None, 1, 1, 1024)  0           ['BlockGroup4__block_3__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_3__se_se_re  (None, 1, 1, 256)   262400      ['BlockGroup4__block_3__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_3__se_se_ex  (None, 1, 1, 1024)  263168      ['BlockGroup4__block_3__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_3__se_se_ex  (None, 4, 8, 1024)  0           ['BlockGroup4__block_3__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup4__block_3__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_10 (Add)                   (None, 4, 8, 1024)   0           ['BlockGroup4__block_3__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup4__block_2__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_3__output_a  (None, 4, 8, 1024)  0           ['add_10[0][0]']                 
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup4__block_4__conv_1 (  (None, 4, 8, 256)   262144      ['BlockGroup4__block_3__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_4_batch_nor  (None, 4, 8, 256)   1024        ['BlockGroup4__block_4__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup4__block_4__act_1 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_4_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup4__block_4__conv_2 (  (None, 4, 8, 256)   589824      ['BlockGroup4__block_4__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_4__batch_no  (None, 4, 8, 256)   1024        ['BlockGroup4__block_4__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_4__act_2 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_4__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_4__conv_3 (  (None, 4, 8, 1024)  262144      ['BlockGroup4__block_4__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_4__batch_no  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_4__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_4__se_se_sq  (None, 1024)        0           ['BlockGroup4__block_4__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_4__se_se_re  (None, 1, 1, 1024)  0           ['BlockGroup4__block_4__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_4__se_se_re  (None, 1, 1, 256)   262400      ['BlockGroup4__block_4__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_4__se_se_ex  (None, 1, 1, 1024)  263168      ['BlockGroup4__block_4__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_4__se_se_ex  (None, 4, 8, 1024)  0           ['BlockGroup4__block_4__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup4__block_4__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_11 (Add)                   (None, 4, 8, 1024)   0           ['BlockGroup4__block_4__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup4__block_3__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_4__output_a  (None, 4, 8, 1024)  0           ['add_11[0][0]']                 
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup4__block_5__conv_1 (  (None, 4, 8, 256)   262144      ['BlockGroup4__block_4__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_5_batch_nor  (None, 4, 8, 256)   1024        ['BlockGroup4__block_5__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup4__block_5__act_1 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_5_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup4__block_5__conv_2 (  (None, 4, 8, 256)   589824      ['BlockGroup4__block_5__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_5__batch_no  (None, 4, 8, 256)   1024        ['BlockGroup4__block_5__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_5__act_2 (A  (None, 4, 8, 256)   0           ['BlockGroup4__block_5__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_5__conv_3 (  (None, 4, 8, 1024)  262144      ['BlockGroup4__block_5__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup4__block_5__batch_no  (None, 4, 8, 1024)  4096        ['BlockGroup4__block_5__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup4__block_5__se_se_sq  (None, 1024)        0           ['BlockGroup4__block_5__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_5__se_se_re  (None, 1, 1, 1024)  0           ['BlockGroup4__block_5__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_5__se_se_re  (None, 1, 1, 256)   262400      ['BlockGroup4__block_5__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup4__block_5__se_se_ex  (None, 1, 1, 1024)  263168      ['BlockGroup4__block_5__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup4__block_5__se_se_ex  (None, 4, 8, 1024)  0           ['BlockGroup4__block_5__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup4__block_5__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_12 (Add)                   (None, 4, 8, 1024)   0           ['BlockGroup4__block_5__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup4__block_4__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup4__block_5__output_a  (None, 4, 8, 1024)  0           ['add_12[0][0]']                 
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup5__block_0__conv_1 (  (None, 4, 8, 512)   524288      ['BlockGroup4__block_5__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup5__block_0_batch_nor  (None, 4, 8, 512)   2048        ['BlockGroup5__block_0__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup5__block_0__act_1 (A  (None, 4, 8, 512)   0           ['BlockGroup5__block_0_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ zero_padding2d_4 (ZeroPadding2  (None, 6, 10, 512)  0           ['BlockGroup5__block_0__act_1[0][
+ D)                                                              0]']                             
+                                                                                                  
+ BlockGroup5__block_0__conv_2 (  (None, 2, 4, 512)   2359296     ['zero_padding2d_4[0][0]']       
+ Conv2D)                                                                                          
+                                                                                                  
+ BlockGroup5__block_0__batch_no  (None, 2, 4, 512)   2048        ['BlockGroup5__block_0__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup5__block_0__act_2 (A  (None, 2, 4, 512)   0           ['BlockGroup5__block_0__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_0__conv_3 (  (None, 2, 4, 2048)  1048576     ['BlockGroup5__block_0__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup5__block_0__batch_no  (None, 2, 4, 2048)  8192        ['BlockGroup5__block_0__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup5__block_0__se_se_sq  (None, 2048)        0           ['BlockGroup5__block_0__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_0__se_se_re  (None, 1, 1, 2048)  0           ['BlockGroup5__block_0__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup5__block_0__se_se_re  (None, 1, 1, 512)   1049088     ['BlockGroup5__block_0__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup5__block_0__projecti  (None, 2, 4, 1024)  0           ['BlockGroup4__block_5__output_ac
+ on_pooling (AveragePooling2D)                                   t[0][0]']                        
+                                                                                                  
+ BlockGroup5__block_0__se_se_ex  (None, 1, 1, 2048)  1050624     ['BlockGroup5__block_0__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_0__projecti  (None, 2, 4, 2048)  2097152     ['BlockGroup5__block_0__projectio
+ on_conv (Conv2D)                                                n_pooling[0][0]']                
+                                                                                                  
+ BlockGroup5__block_0__se_se_ex  (None, 2, 4, 2048)  0           ['BlockGroup5__block_0__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup5__block_0__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_0__projecti  (None, 2, 4, 2048)  8192        ['BlockGroup5__block_0__projectio
+ on_batch_norm (BatchNormalizat                                  n_conv[0][0]']                   
+ ion)                                                                                             
+                                                                                                  
+ add_13 (Add)                   (None, 2, 4, 2048)   0           ['BlockGroup5__block_0__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup5__block_0__projectio
+                                                                 n_batch_norm[0][0]']             
+                                                                                                  
+ BlockGroup5__block_0__output_a  (None, 2, 4, 2048)  0           ['add_13[0][0]']                 
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup5__block_1__conv_1 (  (None, 2, 4, 512)   1048576     ['BlockGroup5__block_0__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup5__block_1_batch_nor  (None, 2, 4, 512)   2048        ['BlockGroup5__block_1__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup5__block_1__act_1 (A  (None, 2, 4, 512)   0           ['BlockGroup5__block_1_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup5__block_1__conv_2 (  (None, 2, 4, 512)   2359296     ['BlockGroup5__block_1__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup5__block_1__batch_no  (None, 2, 4, 512)   2048        ['BlockGroup5__block_1__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup5__block_1__act_2 (A  (None, 2, 4, 512)   0           ['BlockGroup5__block_1__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_1__conv_3 (  (None, 2, 4, 2048)  1048576     ['BlockGroup5__block_1__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup5__block_1__batch_no  (None, 2, 4, 2048)  8192        ['BlockGroup5__block_1__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup5__block_1__se_se_sq  (None, 2048)        0           ['BlockGroup5__block_1__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_1__se_se_re  (None, 1, 1, 2048)  0           ['BlockGroup5__block_1__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup5__block_1__se_se_re  (None, 1, 1, 512)   1049088     ['BlockGroup5__block_1__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup5__block_1__se_se_ex  (None, 1, 1, 2048)  1050624     ['BlockGroup5__block_1__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_1__se_se_ex  (None, 2, 4, 2048)  0           ['BlockGroup5__block_1__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup5__block_1__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_14 (Add)                   (None, 2, 4, 2048)   0           ['BlockGroup5__block_1__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup5__block_0__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup5__block_1__output_a  (None, 2, 4, 2048)  0           ['add_14[0][0]']                 
+ ct (Activation)                                                                                  
+                                                                                                  
+ BlockGroup5__block_2__conv_1 (  (None, 2, 4, 512)   1048576     ['BlockGroup5__block_1__output_ac
+ Conv2D)                                                         t[0][0]']                        
+                                                                                                  
+ BlockGroup5__block_2_batch_nor  (None, 2, 4, 512)   2048        ['BlockGroup5__block_2__conv_1[0]
+ m_1 (BatchNormalization)                                        [0]']                            
+                                                                                                  
+ BlockGroup5__block_2__act_1 (A  (None, 2, 4, 512)   0           ['BlockGroup5__block_2_batch_norm
+ ctivation)                                                      _1[0][0]']                       
+                                                                                                  
+ BlockGroup5__block_2__conv_2 (  (None, 2, 4, 512)   2359296     ['BlockGroup5__block_2__act_1[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup5__block_2__batch_no  (None, 2, 4, 512)   2048        ['BlockGroup5__block_2__conv_2[0]
+ rm_2 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup5__block_2__act_2 (A  (None, 2, 4, 512)   0           ['BlockGroup5__block_2__batch_nor
+ ctivation)                                                      m_2[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_2__conv_3 (  (None, 2, 4, 2048)  1048576     ['BlockGroup5__block_2__act_2[0][
+ Conv2D)                                                         0]']                             
+                                                                                                  
+ BlockGroup5__block_2__batch_no  (None, 2, 4, 2048)  8192        ['BlockGroup5__block_2__conv_3[0]
+ rm_3 (BatchNormalization)                                       [0]']                            
+                                                                                                  
+ BlockGroup5__block_2__se_se_sq  (None, 2048)        0           ['BlockGroup5__block_2__batch_nor
+ ueeze (GlobalAveragePooling2D)                                  m_3[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_2__se_se_re  (None, 1, 1, 2048)  0           ['BlockGroup5__block_2__se_se_squ
+ shape (Reshape)                                                 eeze[0][0]']                     
+                                                                                                  
+ BlockGroup5__block_2__se_se_re  (None, 1, 1, 512)   1049088     ['BlockGroup5__block_2__se_se_res
+ duce (Conv2D)                                                   hape[0][0]']                     
+                                                                                                  
+ BlockGroup5__block_2__se_se_ex  (None, 1, 1, 2048)  1050624     ['BlockGroup5__block_2__se_se_red
+ pand (Conv2D)                                                   uce[0][0]']                      
+                                                                                                  
+ BlockGroup5__block_2__se_se_ex  (None, 2, 4, 2048)  0           ['BlockGroup5__block_2__batch_nor
+ cite (Multiply)                                                 m_3[0][0]',                      
+                                                                  'BlockGroup5__block_2__se_se_exp
+                                                                 and[0][0]']                      
+                                                                                                  
+ add_15 (Add)                   (None, 2, 4, 2048)   0           ['BlockGroup5__block_2__se_se_exc
+                                                                 ite[0][0]',                      
+                                                                  'BlockGroup5__block_1__output_ac
+                                                                 t[0][0]']                        
+                                                                                                  
+ BlockGroup5__block_2__output_a  (None, 2, 4, 2048)  0           ['add_15[0][0]']                 
+ ct (Activation)                                                                                  
+                                                                                                  
+ avg_pool (GlobalAveragePooling  (None, 2048)        0           ['BlockGroup5__block_2__output_ac
+ 2D)                                                             t[0][0]']                        
+                                                                                                  
+ flatten (Flatten)              (None, 2048)         0           ['avg_pool[0][0]']               
+                                                                                                  
+ dense (Dense)                  (None, 240)          491760      ['flatten[0][0]']                
+                                                                                                  
+ dense_1 (Dense)                (None, 15)           3615        ['dense[0][0]']                  
+                                                                                                  
+==================================================================================================
+Total params: 34,191,663
+Trainable params: 495,375
+Non-trainable params: 33,696,288
+__________________________________________________________________________________________________                      precision    recall  f1-score   support
+
+              blouse       0.37      0.34      0.36       500
+         dhoti_pants       0.33      0.05      0.09       500
+            dupattas       0.00      0.00      0.00       500
+               gowns       0.00      0.00      0.00       500
+           kurta_men       0.15      0.23      0.18       500
+leggings_and_salwars       0.21      0.18      0.20       500
+             lehenga       0.31      0.35      0.33       500
+         mojaris_men       0.42      0.08      0.13       500
+       mojaris_women       0.37      0.04      0.07       500
+       nehru_jackets       0.20      0.07      0.11       500
+            palazzos       0.00      0.00      0.00       500
+          petticoats       0.38      0.09      0.14       500
+               saree       0.16      0.23      0.19       500
+           sherwanis       0.38      0.21      0.27       500
+         women_kurta       0.11      0.81      0.19       500
+
+            accuracy                           0.18      7500
+           macro avg       0.23      0.18      0.15      7500
+        weighted avg       0.23      0.18      0.15      7500
