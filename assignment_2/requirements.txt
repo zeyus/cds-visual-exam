@@ -1,4 +1,5 @@
-torch
-torchvision
-torchaudio
+matplotlib
+numpy
+opencv-python
+scikit-learn
 tqdm
