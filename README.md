@@ -646,13 +646,19 @@ Where `<best_model_path>` is the path to the best model weights, `<model>` is th
 
 Some examples were generated for the vgg16 model and can be seen here:
 
+
+
 Black widow:
 
 ![vgg16](assignment_4/out/vgg16/activation_max_45_vgg16_Black_Widow.png)
 
-Ladybird mimic spider:
+Red Knee Tarantula:
 
-![vgg16](assignment_4/out/vgg16/activation_max_45_vgg16_Ladybird_mimic_spider.png)
+![vgg16](assignment_4/out/vgg16/activation_max_45_vgg16_Red_Knee_Tarantula.png)
+
+Spiny-backed Orb-weaver
+
+![vgg16](assignment_4/out/vgg16/activation_max_45_vgg16_Spiny-backed_Orb-weaver.png)
 
 ## Conclusion
 
