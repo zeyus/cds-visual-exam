@@ -31,6 +31,7 @@ import cv2
 import numpy as np
 import pandas as pd
 
+
 def get_args():
     """Get command-line arguments
 
@@ -77,6 +78,7 @@ def get_args():
 
     return parser.parse_args()
 
+
 def parse_image(filename: str) -> np.ndarray:
     """Parse image
 
@@ -91,6 +93,7 @@ def parse_image(filename: str) -> np.ndarray:
     # Convert to RGB
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
+
 
 def get_images(path: pathlib.Path, img_ext: str = 'jpg') -> t.List[str]:
     """Get list of images
@@ -108,8 +111,9 @@ def get_images(path: pathlib.Path, img_ext: str = 'jpg') -> t.List[str]:
         # exclude hidden dirs and files
         files = [file for file in files if not file.startswith('.') and not os.path.basename(file).startswith('.') and file.endswith(img_ext)]
         images += [os.path.join(root, file) for file in files]
-    
+
     return list(set(images))
+
 
 def extract_zip(data: pathlib.Path, img_ext: str = 'jpg') -> t.List[str]:
     """Extract zip file
@@ -134,10 +138,11 @@ def extract_zip(data: pathlib.Path, img_ext: str = 'jpg') -> t.List[str]:
             # otherwise, extract them
             print('Extracting files')
             zip_ref.extractall(data.parent / 'extracted')
-        
+
     # Get list of files
     files = get_images(data.parent, img_ext)
     return files
+
 
 def load_data(data_path: pathlib.Path, image_ext: str = 'jpg') -> t.Tuple[t.List[np.ndarray], t.List[str]]:
     """Load image data
@@ -149,6 +154,7 @@ def load_data(data_path: pathlib.Path, image_ext: str = 'jpg') -> t.Tuple[t.List
         t.Tuple(t.List[np.ndarray] t.List[str]): List of images and list of filenames
 
     """
+    files = []
     # If data_path is a directory, get all the files in that directory
     if data_path.is_dir():
         files = get_images(data_path, image_ext)
@@ -157,13 +163,14 @@ def load_data(data_path: pathlib.Path, image_ext: str = 'jpg') -> t.Tuple[t.List
     # If there's still only one (or zero) files, it's probably not a valid path
     if len(list(files)) <= 1:
         raise ValueError(f'"{data_path}" is not a valid path')
-    
+
     images = []
     for image_file in files:
         image = parse_image(image_file)
         images.append(image)
 
     return images, files
+
 
 def get_histogram(image: np.ndarray) -> np.ndarray:
     """Get histogram of image
@@ -221,6 +228,7 @@ def find_similar_images(target: np.ndarray,
     # Return n+1 most similar images (the first one will be the target image)
     return sorted_distances[:min(n+1, len(sorted_distances))]
 
+
 def main():
     """Main function"""
     # Get command-line arguments
@@ -228,7 +236,7 @@ def main():
 
     # Load image data
     images, image_names = load_data(args.data, args.file_extension)
-    
+
     # if no target is specified, prompt with a range (min, max indices of images)
     if args.target is None:
         target = None
@@ -250,7 +258,7 @@ def main():
         args.target = args.data / args.target
         if not args.target.is_file():
             raise ValueError(f'"{args.target}" is not a valid path')
-        target = parse_image(args.target)
+        target = parse_image(str(args.target))
     else:
         raise ValueError(f'"{args.target}" is not a valid path')
     

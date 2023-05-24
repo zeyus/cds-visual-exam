@@ -1,4 +1,33 @@
-# VGG16 Image Classification with the Indo Fashion Dataset
+# Assignment 3 - Using pretrained CNNs for image classification
+
+## Original Assignment Description
+
+In the previous assignments involving classification, we were performing a kind of simple feature extraction on images by making them greyscale and flattening them to a single vector. This vector of pixel values was then used as the input for some kind of classification model.
+
+For this assignment, we're going to be working with an interesting kind of cultural phenomenon - fashion. On UCloud, you have access to a dataset of *Indo fashion* taken from this [Kaggle dataset](https://www.kaggle.com/datasets/validmodel/indo-fashion-dataset). There is a paper which goes along with it on *arXiv.org*, which you can read [here](https://arxiv.org/abs/2104.02830).
+
+Your instructions for this assignment are short and simple:
+
+- You should write code which trains a classifier on this dataset using a *pretrained CNN like VGG16*
+- Save the training and validation history plots
+- Save the classification report
+
+### Tips
+
+- You should not upload the data to your repo - it's around 3GB in size.
+  - Instead, you should document in the README file where your data comes from, how a user should find it, and where it should be saved in order for your code to work correctly.
+- The data comes already split into training, test, and validation datasets. You can use these in a ```TensorFlow``` data generator pipeline like we saw in class this week - you can see an example of that [here](https://stackoverflow.com/questions/42443936/keras-split-train-test-set-when-using-imagedatagenerator).
+- There are a lot of images, around 106k in total. Make sure to reserve enough time for running your code!
+- The image labels are in the metadata folder, stored as JSON files. These can be read into ```pandas``` using ```read_json()```. You can find the documentation for that online.
+
+
+# Assignment 3 - Luke Ring (202009983)
+
+## Contribution
+
+The code for this assignment was written independently and is my own (Luke Ring, 202009983) [zeyus @ github](https://github.com/zeyus).
+
+## Description
 
 This repository contains code that fine tunes a VGG16 model on the Indo Fashion dataset. The training history plot, confusion matrix and classification report are saved in the `out/` folder, along with a csv file containing the training history, and a txt file containing the model summary and classification report.
 
@@ -25,9 +54,9 @@ If you have an NVIDIA GPU you can do the following before installing the prerequ
 ### Prerequisites
 
 - Install the required packages using `pip install -r requirements.txt`
-- Download the dataset from [Kaggle](https://www.kaggle.com/datasets/validmodel/indo-fashion-dataset), unzip and save it to `data/`
-- - Get your kaggle API token from [here](https://www.kaggle.com/settings) and save it to `~/.kaggle/kaggle.json`
-- - Run `python src/cnn.py --download` to download the dataset
+- Download the dataset from [Kaggle](https://www.kaggle.com/datasets/validmodel/indo-fashion-dataset), unzip and save it to `data/` either manually, or by doing the following:
+  - Get your kaggle API token from [here](https://www.kaggle.com/settings) and save it to `~/.kaggle/kaggle.json`
+  - Run `python src/cnn.py --download` to download the dataset
 
 ## Usage
 
@@ -35,7 +64,7 @@ If you have an NVIDIA GPU you can do the following before installing the prerequ
 
 Most settings can be customized, such as input resizing, batch size, number of epochs, etc. Run `python src/cnn.py --help` to see all the available options.
 
-```bash
+```txt
 ❯ python .\src\cnn.py --help
 usage: cnn.py [-h] [--version] [-m MODEL_SAVE_PATH] [--download] [-d DATASET_PATH] [-s IMAGE_SIZE] [-w IMAGE_WIDTH] [-t IMAGE_HEIGHT] [-b BATCH_SIZE] [-e EPOCHS] [-o OUT] [-n] [-c FROM_CHECKPOINT] [-r] [-p PARALLEL]
 
@@ -145,6 +174,4 @@ leggings_and_salwars       0.66      0.75      0.70       500
 # Conclusion
 
 The model was able to achieve an accuracy of 75% on the test set, which is not bad, but it could have been better. 
-Notably, something must have gone wrong with the training continuation, although the fine-tuned model was loaded
-correctly, the model training did not seem to continue, but given more epochs it's possible that the accuracy cloud
-have been improved.
+Notably, something must have gone wrong with the training continuation, although the fine-tuned model was loaded correctly, the model training did not seem to continue, but given more epochs it's possible that the accuracy could have been further improved.
